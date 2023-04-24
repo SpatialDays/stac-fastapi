@@ -36,7 +36,7 @@ jobs:
         with:
           context: .
           file: docker/Dockerfile.pgstac
-          cache-from: type=registry,ref=${{ vars.DOCKER_REGISTRY_URL }}/stac-fastapi:cache
-          cache-to: type=registry,ref=${{ vars.DOCKER_REGISTRY_URL }}/stac-fastapi:cache,mode=max
+          cache-from: type=registry,ref=${{ secrets.EO_PROJ_STAGING_DOCKER_REGISTRY_URL }}/stac-fastapi:cache
+          cache-to: type=registry,ref=${{ secrets.EO_PROJ_STAGING_DOCKER_REGISTRY_URL }}/stac-fastapi:cache,mode=max
           push: true
-          tags: ${{ vars.DOCKER_REGISTRY_URL }}/stac-fastapi:${{ env.SHORT_SHA }}
+          tags: ${{ secrets.EO_PROJ_STAGING_DOCKER_REGISTRY_URL }}/stac-fastapi:${{ env.SHORT_SHA }}
