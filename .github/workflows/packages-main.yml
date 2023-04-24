@@ -8,8 +8,6 @@ on:
       - main
       - prod
       - production
-    tags:
-      - "*"
 
 jobs:
   docker-build-push-prod:

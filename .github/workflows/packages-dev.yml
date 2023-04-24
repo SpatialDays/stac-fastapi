@@ -5,15 +5,13 @@ permissions:
 on:
   push:
     branches:
-       - dev
-       - development
-       - stage
-       - staging
-    tags:
-      - "*"
+      - dev
+      - development
+      - stage
+      - staging
 
 jobs:
-  docker-build-push-prod:
+  docker-build-push-dev:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
