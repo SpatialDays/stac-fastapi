@@ -1,4 +1,7 @@
-name: packages
+name: Build and push Docker image for pgstac - prod environment
+
+permissions:
+  contents: read
 on:
   push:
     branches:
@@ -7,39 +10,30 @@ on:
       - "*"
 
 jobs:
-  docker-build-push:
+  docker-build-push-prod:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
-    strategy:
-      fail-fast: true
-      matrix:
-        backend: ["sqlalchemy", "pgstac"]
+    environment: PROD_ENVIRONMENT
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-      - name: Log in to the Container registry
-        uses: docker/login-action@v2.1.0
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Extract metadata (tags, labels) for Docker
-        id: meta
-        uses: docker/metadata-action@v4.3.0
-        with:
-          images: ghcr.io/stac-utils/stac-fastapi
-          tags: |
-            type=schedule,suffix=-${{ matrix.backend }}
-            type=ref,event=branch,suffix=-${{ matrix.backend }}
-            type=ref,event=tag,suffix=-${{ matrix.backend }}
-            type=ref,event=pr,suffix=-${{ matrix.backend }}
-      - name: Build and push Docker image
-        uses: docker/build-push-action@v4.0.0
-        with:
-          context: .
-          file: docker/Dockerfile.${{ matrix.backend }}
-          push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+      - name: Set Short SHA
+        run: echo "SHORT_SHA=$(git rev-parse --short=7 $GITHUB_SHA)" >> $GITHUB_ENV
+      - name: echo Short SHA
+        run: echo $SHORT_SHA
+      # - name: Log in to the Container registry
+      #   uses: docker/login-action@v2.1.0
+      #   with:
+      #     registry: ${{ vars.DOCKER_REGISTRY_URL}}
+      #     username: ${{ secrets.DOCKER_REGISTRY_USER }}
+      #     password: ${{ secrets.DOCKER_REGISTRY_PASSWORD }}
+
+      # - name: Build and push Docker image
+      #   uses: docker/build-push-action@v4.0.0
+      #   with:
+      #     context: .
+      #     file: docker/Dockerfile.pgstac
+      #     cache-from: type=registry,ref=${{ vars.DOCKER_REGISTRY_URL }}/stac-fastapi:cache
+      #     cache-to: type=registry,ref=${{ vars.DOCKER_REGISTRY_URL }}/stac-fastapi:cache,mode=max
+      #     push: true
+      #     tags: ${{ vars.DOCKER_REGISTRY_URL }}/stac-fastapi:${{ env.SHORT_SHA }}
