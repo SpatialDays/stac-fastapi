@@ -1,0 +1,44 @@
+name: Build and push Docker image for pgstac - dev environment
+
+permissions:
+  contents: read
+on:
+  push:
+    branches:
+       - dev
+       - development
+       - stage
+       - staging
+    tags:
+      - "*"
+
+jobs:
+  docker-build-push-prod:
+    runs-on: ubuntu-latest
+    environment: STAGING_ENVIRONMENT
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Set Short SHA
+        run: echo "SHORT_SHA=$(git rev-parse --short=7 $GITHUB_SHA)" >> $GITHUB_ENV
+      - name: echo Short SHA
+        run: echo $SHORT_SHA
+      - name: Log in to the Container registry
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ vars.DOCKER_REGISTRY_URL}}
+          username: ${{ secrets.DOCKER_REGISTRY_USER }}
+          password: ${{ secrets.DOCKER_REGISTRY_PASSWORD }}
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v2
+      - name: Build and push Docker image under tag ${{ env.SHORT_SHA }}
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: docker/Dockerfile.pgstac
+          cache-from: type=registry,ref=${{ vars.DOCKER_REGISTRY_URL }}/stac-fastapi:cache
+          cache-to: type=registry,ref=${{ vars.DOCKER_REGISTRY_URL }}/stac-fastapi:cache,mode=max
+          push: true
+          tags: ${{ vars.DOCKER_REGISTRY_URL }}/stac-fastapi:${{ env.SHORT_SHA }}
