@@ -24,4 +24,4 @@ COPY ./stac_fastapi/sqlalchemy/alembic.ini /app/alembic.ini
 
 ENV PATH="/opt/venv/bin:$PATH"
 
-CMD ["uvicorn", "stac_fastapi.sqlalchemy.app:app", "--host", "0.0.0.0", "--port", "8082"]
+CMD ["uvicorn", "stac_fastapi.sqlalchemy.app:app", "--host", "0.0.0.0", "--port", "8081"]

@@ -37,4 +37,4 @@ RUN wget -O /tmp/pgstac.sql https://raw.githubusercontent.com/stac-utils/pgstac/
 
 # Set the entrypoint for the container to the script
 ENTRYPOINT ["./entrypoint.sh"]
-CMD ["uvicorn", "stac_fastapi.pgstac.app:app", "--host", "0.0.0.0", "--port", "8080"]
+CMD ["uvicorn", "stac_fastapi.pgstac.app:app", "--host", "0.0.0.0", "--port", "8082"]
