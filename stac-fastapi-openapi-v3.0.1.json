@@ -1,15 +1,10 @@
 {
     "openapi": "3.0.1",
     "info": {
-        "title": "test",
+        "title": "stac-fastapi",
         "description": "",
         "version": "1.0"
     },
-    "servers": [
-        {
-            "url": "https://os-eo-platform-rg-staging-apim.azure-api.net/test"
-        }
-    ],
     "paths": {
         "/": {
             "get": {
