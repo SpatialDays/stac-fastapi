@@ -1,7 +1,7 @@
 version: '3'
 services:
   stac-fastapi-pgstac:
-    image: ghcr.io/stac-utils/stac-fastapi:main-pgstac
+    image: abc
     platform: linux/amd64
     environment:
       - APP_HOST=0.0.0.0
@@ -20,7 +20,7 @@ services:
       - DB_MAX_CONN_SIZE=1
       - USE_API_HYDRATE=${USE_API_HYDRATE:-false}
     ports:
-      - "8080:8080"
+      - "9888:8082"
     depends_on:
       - pgstac
 

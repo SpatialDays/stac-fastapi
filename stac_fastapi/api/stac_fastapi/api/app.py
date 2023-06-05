@@ -31,6 +31,7 @@ from stac_fastapi.types.config import ApiSettings, Settings
 from stac_fastapi.types.core import AsyncBaseCoreClient, BaseCoreClient
 from stac_fastapi.types.extension import ApiExtension
 from stac_fastapi.types.search import BaseSearchGetRequest, BaseSearchPostRequest
+from fastapi.openapi.utils import get_openapi
 
 
 @attr.s
@@ -72,6 +73,9 @@ class StacApi:
         ),
         converter=update_openapi,
     )
+
+    
+
     router: APIRouter = attr.ib(default=attr.Factory(APIRouter))
     title: str = attr.ib(default="stac-fastapi")
     api_version: str = attr.ib(default="0.1")
@@ -319,6 +323,7 @@ class StacApi:
             description=self.description,
             routes=self.app.routes,
             servers=self.app.servers,
+            openapi_version="3.0.1"
         )
 
         self.app.openapi_schema = openapi_schema
